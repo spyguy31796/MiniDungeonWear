@@ -1,6 +1,18 @@
-MiniDungeon
+MiniDungeonWear
 ===========
+An attempt to port MiniDungeon to WearOS
 
+This readme will be expanded and improved over time.
+
+
+
+
+
+
+
+
+Readme from original project: MiniDungeon
+============
 Explore a dungeon as you go about your day. Exploring is randomized and time based, so you only act when an event is triggered. Encounter random monsters and chests. Survive, and you can advance deeper into the dungeon. 
 
 Controls:
