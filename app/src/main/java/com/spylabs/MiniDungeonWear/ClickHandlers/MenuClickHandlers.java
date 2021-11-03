@@ -7,11 +7,19 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.spylabs.MiniDungeonWear.GameActivity;
+import com.spylabs.MiniDungeonWear.SettingsActivity;
 
 public class MenuClickHandlers {
     public static View.OnClickListener getStartButtonClickHandler() {
         return v -> {
             Intent intent = new Intent(v.getContext(), GameActivity.class);
+            startActivity(v.getContext(), intent, Bundle.EMPTY);
+        };
+    }
+
+    public static View.OnClickListener getSettingsButtonClickHandler() {
+        return v -> {
+            Intent intent = new Intent(v.getContext(), SettingsActivity.class);
             startActivity(v.getContext(), intent, Bundle.EMPTY);
         };
     }

@@ -11,6 +11,7 @@ public class MainActivity extends Activity {
 
     private ActivityMainBinding binding;
     private Button btnStart;
+    private Button btnSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +23,9 @@ public class MainActivity extends Activity {
         btnStart = binding.btnStart;
 
         btnStart.setOnClickListener(MenuClickHandlers.getStartButtonClickHandler());
+
+        btnSettings = binding.btnSetting;
+
+        btnSettings.setOnClickListener(MenuClickHandlers.getSettingsButtonClickHandler());
     }
 }
