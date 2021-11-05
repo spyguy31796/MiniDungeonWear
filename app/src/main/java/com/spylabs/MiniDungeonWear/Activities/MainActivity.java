@@ -1,4 +1,4 @@
-package com.spylabs.MiniDungeonWear;
+package com.spylabs.MiniDungeonWear.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;

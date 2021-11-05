@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
-    tools:context="com.spylabs.MiniDungeonWear.MainActivity"
+    tools:context="com.spylabs.MiniDungeonWear.Activities.MainActivity"
     tools:deviceIds="wear">
 
     <androidx.constraintlayout.widget.ConstraintLayout

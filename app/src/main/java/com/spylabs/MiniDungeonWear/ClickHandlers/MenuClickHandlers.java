@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.spylabs.MiniDungeonWear.GameActivity;
-import com.spylabs.MiniDungeonWear.SettingsActivity;
+import com.spylabs.MiniDungeonWear.Activities.GameActivity;
+import com.spylabs.MiniDungeonWear.Activities.SettingsActivity;
 
 public class MenuClickHandlers {
     public static View.OnClickListener getStartButtonClickHandler() {

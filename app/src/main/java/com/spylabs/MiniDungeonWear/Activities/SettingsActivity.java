@@ -1,7 +1,9 @@
-package com.spylabs.MiniDungeonWear;
+package com.spylabs.MiniDungeonWear.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.spylabs.MiniDungeonWear.R;
 
 public class SettingsActivity extends Activity {
 
