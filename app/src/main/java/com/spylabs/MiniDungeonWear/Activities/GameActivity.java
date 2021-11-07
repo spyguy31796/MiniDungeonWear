@@ -10,9 +10,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.spylabs.MiniDungeonWear.Managers.AdventureManager;
+import com.spylabs.MiniDungeonWear.Managers.OptionsManager;
 import com.spylabs.MiniDungeonWear.Models.Character;
 import com.spylabs.MiniDungeonWear.Models.Location;
 import com.spylabs.MiniDungeonWear.Managers.LocationManager;
+import com.spylabs.MiniDungeonWear.Models.Menu;
 import com.spylabs.MiniDungeonWear.databinding.ActivityGameBinding;
 
 import java.util.Calendar;
@@ -37,11 +40,11 @@ public class GameActivity extends Activity {
 
     private TextView description;
 
-    private Character c;
+    private AdventureManager adventureManager = new AdventureManager(new OptionsManager());
 
-    private LocationManager locationManager = new LocationManager();
+    // private LocationManager locationManager = new LocationManager();
 
-    private Location currentLocation;
+    // private Location currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +59,7 @@ public class GameActivity extends Activity {
 
         updateClock();
 
-        // TODO: Load state
-        c = new Character();
-
-        updateCharacter();
-
-        currentLocation = locationManager.getNewRandomLocation();
+        renderCharacter();
 
         // TODO: Persist with background service.
         // Perform Actions Every Minute
@@ -71,9 +69,11 @@ public class GameActivity extends Activity {
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                currentLocation = locationManager.getNewRandomLocation();
                 updateClock();
-                updateLocation();
+                adventureManager.UpdateAdventure();
+
+                renderLocation();
+                renderEvent();
             }
         };
         registerReceiver(receiver, filter);
@@ -97,24 +97,34 @@ public class GameActivity extends Activity {
         clock.setText(c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE));
     }
 
-    private void updateCharacter() {
+    private void renderCharacter() {
+        Character c = adventureManager.getCharacter();
         currentHP.setText(String.valueOf(c.getStats().getCurrentHealth()));
         maxHP.setText(String.valueOf(c.getStats().getMaxHealth()));
         level.setText(String.valueOf(c.getLevel()));
     }
 
-    private void updateLocation() {
+    private void renderMenu() {
+        Menu currentMenu = adventureManager.getMenuManager().getCurrentMenu();
+    }
+
+    private void renderLocation() {
         // TODO: This is not efficient, should atleast keep a mapping of ids to resources for quick changes.
         Context context = viewPort.getContext();
-        int id = context.getResources().getIdentifier(currentLocation.getImageResource(), "drawable", context.getPackageName());
+        int id = context.getResources().getIdentifier(adventureManager.getCurrentLocation().getImageResource(), "drawable", context.getPackageName());
         viewPort.setImageResource(id);
 
-        if (currentLocation.getEnemyResource() != null) {
+        // TODO: Remove this
+        if (adventureManager.getCurrentLocation().getEnemyResource() != null) {
             context = enemyViewPort.getContext();
-            id = context.getResources().getIdentifier(currentLocation.getEnemyResource(), "drawable", context.getPackageName());
+            id = context.getResources().getIdentifier(adventureManager.getCurrentLocation().getEnemyResource(), "drawable", context.getPackageName());
             enemyViewPort.setImageResource(id);
         } else {
             enemyViewPort.setImageDrawable(null);
         }
+    }
+
+    private void renderEvent() {
+
     }
 }
