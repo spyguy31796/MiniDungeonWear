@@ -1,8 +1,11 @@
 package com.spylabs.MiniDungeonWear.Managers;
 
+import static com.spylabs.MiniDungeonWear.Managers.CharacterManager.showProgressMenuCallable;
+import static com.spylabs.MiniDungeonWear.Managers.CharacterManager.showStatMenuCallable;
+import static com.spylabs.MiniDungeonWear.Managers.MenuManager.goBackCallable;
+import static com.spylabs.MiniDungeonWear.Managers.OptionsManager.showOptionsMenuCallable;
 import static com.spylabs.MiniDungeonWear.Models.Configuration.EVENT_CHANCE_SCALING;
 
-import com.spylabs.MiniDungeonWear.Models.Character;
 import com.spylabs.MiniDungeonWear.Models.Event;
 import com.spylabs.MiniDungeonWear.Models.Location;
 import com.spylabs.MiniDungeonWear.Models.Menu;
@@ -15,9 +18,8 @@ public class AdventureManager {
     LocationManager locationManager;
     Location currentLocation;
     OptionsManager optionsManager;
-    MenuManager menuManager;
 
-    Character character;
+    CharacterManager characterManager;
 
     int ticksSinceLastEvent = 0;
 
@@ -27,10 +29,10 @@ public class AdventureManager {
     public AdventureManager(OptionsManager options) {
         this.eventManager = new EventManager();
         this.locationManager = new LocationManager();
+        // TODO: I don't know if I need to pass this in here... I might consider separating the options out of the game
+        //  if I add a permanent front end wrapper
         this.optionsManager = options;
-        this.menuManager = new MenuManager();
-
-        this.character  = new Character();
+        this.characterManager = new CharacterManager();
 
         try {
             showAdventureMenuCallable().call();
@@ -40,40 +42,38 @@ public class AdventureManager {
         }
     }
 
-    private Menu getAdventureMenuDef() {
+    // TODO: Consider moving all menus to the MenuManager
+    private static Menu getAdventureMenuDef() {
         Menu.MenuBuilder builder = new Menu.MenuBuilder();
-        builder.add(new Menu.MenuEntry("Main", "Open the main menu", showMainMenuCallable()))
-                .add(new Menu.MenuEntry("Unselectable", "For Debug", null))
-                .add(new Menu.MenuEntry("Debug", "For Debug", showMainMenuCallable()))
-                .add(new Menu.MenuEntry("Debug2", "For Debug", showMainMenuCallable()));
+        builder.add(new Menu.MenuEntry("Main", "Open the main menu", showMainMenuCallable()));
         return builder.build();
     }
 
     // TODO: Belongs somewhere else?
-    private Menu getMainMenuDef() {
+    private static Menu getMainMenuDef() {
         Menu.MenuBuilder builder = new Menu.MenuBuilder();
-        builder.add(new Menu.MenuEntry("Back", "Open the main menu", menuManager.goBackCallable()))
-                .add(new Menu.MenuEntry("Unselectable", "For Debug", null))
-                .add(new Menu.MenuEntry("Diff", "For Debug", null))
-                .add(new Menu.MenuEntry("Diff2", "For Debug", menuManager.goBackCallable()));
+        builder.add(new Menu.MenuEntry("Quit", "Return to adventure", goBackCallable()))
+                .add(new Menu.MenuEntry("Items", "Items Owned", null))
+                .add(new Menu.MenuEntry("Progress", "Character advancement", showProgressMenuCallable()))
+                .add(new Menu.MenuEntry("Stats", "Character Stats", showStatMenuCallable()))
+                .add(new Menu.MenuEntry("Options", "Open the options menu", showOptionsMenuCallable()));
         return builder.build();
     }
 
-    public Callable<Void> showAdventureMenuCallable() {
+    public static Callable<Void> showAdventureMenuCallable() {
         return () -> {
-            menuManager.setCurrentMenu(getAdventureMenuDef());
+            MenuManager.setCurrentMenu(getAdventureMenuDef());
             return null;
         };
     }
 
     // TODO: Belongs somewhere else?
-    public Callable<Void> showMainMenuCallable() {
+    public static Callable<Void> showMainMenuCallable() {
         return () -> {
-            menuManager.setCurrentMenu(getMainMenuDef());
+            MenuManager.setCurrentMenu(getMainMenuDef());
             return null;
         };
     }
-
 
     public void UpdateAdventure() {
         // TODO: Intelligent skipping when app not focused.
@@ -143,11 +143,7 @@ public class AdventureManager {
         return currentLocation;
     }
 
-    public Character getCharacter() {
-        return character;
-    }
-
-    public MenuManager getMenuManager() {
-        return menuManager;
+    public CharacterManager getCharacterManager() {
+        return characterManager;
     }
 }

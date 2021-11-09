@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.core.view.GestureDetectorCompat;
 
 import com.spylabs.MiniDungeonWear.Managers.AdventureManager;
+import com.spylabs.MiniDungeonWear.Managers.MenuManager;
 import com.spylabs.MiniDungeonWear.Managers.OptionsManager;
 import com.spylabs.MiniDungeonWear.Models.Character;
 import com.spylabs.MiniDungeonWear.Models.Location;
@@ -111,14 +112,14 @@ public class GameActivity extends Activity {
     }
 
     private void renderCharacter() {
-        Character c = adventureManager.getCharacter();
+        Character c = adventureManager.getCharacterManager().getCharacter();
         currentHP.setText(String.valueOf(c.getStats().getCurrentHealth()));
         maxHP.setText(String.valueOf(c.getStats().getMaxHealth()));
         level.setText(String.valueOf(c.getLevel()));
     }
 
     private void renderMenu() {
-        Menu currentMenu = adventureManager.getMenuManager().getCurrentMenu();
+        Menu currentMenu = MenuManager.getCurrentMenu();
         List<Menu.MenuEntry> menuEntryList = currentMenu.getMenuItems();
         int currentPosition = currentMenu.getPosition();
         for (int i = 0; i < binding.MenuLayout.getChildCount(); i++) {
@@ -159,7 +160,7 @@ public class GameActivity extends Activity {
 
     public boolean onSwipeUp() {
         //displayToast("Swiped Up");
-        adventureManager.getMenuManager().getCurrentMenu().decrementPosition();
+        MenuManager.getCurrentMenu().decrementPosition();
         // TODO: Inefficient to just rerender the whole menu just to change selection
         renderMenu();
         return true;
@@ -167,14 +168,14 @@ public class GameActivity extends Activity {
 
     public boolean onSwipeDown() {
         //displayToast("Swiped Down");
-        adventureManager.getMenuManager().getCurrentMenu().incrementPosition();
+        MenuManager.getCurrentMenu().incrementPosition();
         // TODO: Inefficient to just rerender the whole menu just to change selection
         renderMenu();
         return true;
     }
 
     public boolean onTap() {
-        Menu m = adventureManager.getMenuManager().getCurrentMenu();
+        Menu m = MenuManager.getCurrentMenu();
         m.getMenuItems().get(m.getPosition()).processCallback();
         renderMenu();
         return true;
