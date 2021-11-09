@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtCurrentHP" />
 
     <TextView
-        android:id="@+id/txtDescription"
+        android:id="@+id/txtHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
@@ -67,6 +67,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/txtDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:layout_marginBottom="40dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/imgViewPort"
         android:layout_width="100dp"
@@ -74,7 +84,7 @@
         android:layout_marginStart="16dp"
         android:src="@drawable/dungeonstraight_color"
         app:layout_constraintStart_toEndOf="@+id/txtLevel"
-        app:layout_constraintTop_toBottomOf="@+id/txtDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/txtHeader" />
 
     <ImageView
         android:id="@+id/imgEnemyViewPort"
@@ -86,6 +96,7 @@
         app:layout_constraintTop_toTopOf="@+id/imgViewPort" />
 
     <TableLayout
+        android:id="@+id/MenuLayout"
         android:layout_width="70dp"
         android:layout_height="118dp"
         android:layout_marginTop="30dp"

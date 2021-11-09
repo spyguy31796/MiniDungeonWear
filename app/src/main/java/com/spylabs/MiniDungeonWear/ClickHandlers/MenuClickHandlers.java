@@ -13,6 +13,7 @@ public class MenuClickHandlers {
     public static View.OnClickListener getStartButtonClickHandler() {
         return v -> {
             Intent intent = new Intent(v.getContext(), GameActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(v.getContext(), intent, Bundle.EMPTY);
         };
     }

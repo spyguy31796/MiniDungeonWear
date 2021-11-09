@@ -34,18 +34,29 @@ public class AdventureManager {
 
         try {
             showAdventureMenuCallable().call();
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+            // TODO: Add proper logging.
+            System.out.println("Error creating menu");
+        }
     }
 
     private Menu getAdventureMenuDef() {
         Menu.MenuBuilder builder = new Menu.MenuBuilder();
-        builder.add(new Menu.MenuEntry("Main", "Open the main menu", showMainMenuCallable()));
+        builder.add(new Menu.MenuEntry("Main", "Open the main menu", showMainMenuCallable()))
+                .add(new Menu.MenuEntry("Unselectable", "For Debug", null))
+                .add(new Menu.MenuEntry("Debug", "For Debug", showMainMenuCallable()))
+                .add(new Menu.MenuEntry("Debug2", "For Debug", showMainMenuCallable()));
         return builder.build();
     }
 
     // TODO: Belongs somewhere else?
     private Menu getMainMenuDef() {
-        return null;
+        Menu.MenuBuilder builder = new Menu.MenuBuilder();
+        builder.add(new Menu.MenuEntry("Back", "Open the main menu", menuManager.goBackCallable()))
+                .add(new Menu.MenuEntry("Unselectable", "For Debug", null))
+                .add(new Menu.MenuEntry("Diff", "For Debug", null))
+                .add(new Menu.MenuEntry("Diff2", "For Debug", menuManager.goBackCallable()));
+        return builder.build();
     }
 
     public Callable<Void> showAdventureMenuCallable() {
