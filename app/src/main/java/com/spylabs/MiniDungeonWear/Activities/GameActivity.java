@@ -19,11 +19,10 @@ import android.widget.Toast;
 import androidx.core.view.GestureDetectorCompat;
 
 import com.spylabs.MiniDungeonWear.Managers.AdventureManager;
+import com.spylabs.MiniDungeonWear.Managers.EventManager;
 import com.spylabs.MiniDungeonWear.Managers.MenuManager;
 import com.spylabs.MiniDungeonWear.Managers.OptionsManager;
 import com.spylabs.MiniDungeonWear.Models.Character;
-import com.spylabs.MiniDungeonWear.Models.Location;
-import com.spylabs.MiniDungeonWear.Managers.LocationManager;
 import com.spylabs.MiniDungeonWear.Models.Menu;
 import com.spylabs.MiniDungeonWear.databinding.ActivityGameBinding;
 
@@ -48,9 +47,9 @@ public class GameActivity extends Activity {
 
     private ImageView viewPort;
 
-    private ImageView enemyViewPort;
-
     private TextView description;
+
+    private TextView textViewPort;
 
     private AdventureManager adventureManager;
 
@@ -76,6 +75,7 @@ public class GameActivity extends Activity {
         renderMenu();
 
         // TODO: Persist with background service.
+        // TODO: Delay action if in a menu.
         // Perform Actions Every Minute
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.intent.action.TIME_TICK");
@@ -88,6 +88,9 @@ public class GameActivity extends Activity {
 
                 renderLocation();
                 renderEvent();
+
+                // TODO: Does this cause issues if an event comes in while navigating a menu?
+                renderMenu();
             }
         };
         registerReceiver(receiver, filter);
@@ -100,7 +103,6 @@ public class GameActivity extends Activity {
         level = binding.txtLevel;
         viewPort = binding.imgViewPort;
         description = binding.txtDescription;
-        enemyViewPort = binding.imgEnemyViewPort;
     }
 
     private void updateClock() {
@@ -108,7 +110,7 @@ public class GameActivity extends Activity {
         Calendar c = new GregorianCalendar();
         c.setTimeZone(TimeZone.getDefault());
         c.setTimeInMillis(now);
-        clock.setText(c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE));
+        clock.setText(String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
     }
 
     private void renderCharacter() {
@@ -136,26 +138,55 @@ public class GameActivity extends Activity {
                 (((TableRow) binding.MenuLayout.getChildAt(i)).getChildAt(0)).setBackgroundColor(Color.TRANSPARENT);
             }
         }
+
+        // Fill out the description bar.
+        description.setText(menuEntryList.get(currentPosition).getDescription());
+
+        // Display displayable elements
+        if (currentMenu.hasDisplayableElement()) {
+            textViewPort.setText(currentMenu.getDisplayText());
+            Context context = viewPort.getContext();
+            int id = context.getResources().getIdentifier(currentMenu.getDisplayImage(), "drawable", context.getPackageName());
+            viewPort.setImageResource(id);
+        }
     }
 
     private void renderLocation() {
+        // Don't render a location if we are currently in an event.
+        if (MenuManager.getCurrentMenu().hasDisplayableElement()) {
+            return;
+        }
         // TODO: This is not efficient, should atleast keep a mapping of ids to resources for quick changes.
         Context context = viewPort.getContext();
         int id = context.getResources().getIdentifier(adventureManager.getCurrentLocation().getImageResource(), "drawable", context.getPackageName());
         viewPort.setImageResource(id);
-
-        // TODO: Remove this
-        if (adventureManager.getCurrentLocation().getEnemyResource() != null) {
-            context = enemyViewPort.getContext();
-            id = context.getResources().getIdentifier(adventureManager.getCurrentLocation().getEnemyResource(), "drawable", context.getPackageName());
-            enemyViewPort.setImageResource(id);
-        } else {
-            enemyViewPort.setImageDrawable(null);
-        }
     }
 
     private void renderEvent() {
-
+        if (adventureManager.getCurrentEvent() != null) {
+            // Render Related Menu for the event:
+            try {
+                switch (adventureManager.getCurrentEvent().getType()) {
+                    // TODO: Consider moving this logic elsewhere
+                    case ITEM:
+                        EventManager.showItemGainMenuDef().call();
+                        break;
+                    case SHOP:
+                        EventManager.showShopMenuDef().call();
+                        break;
+                    case BATTLE:
+                        EventManager.showBattleMainMenuDef().call();
+                        break;
+                    case NEW_FLOOR:
+                        EventManager.showNewFloorMenuDef().call();
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception ex) {
+                Log.d("RENDER_EVENT", "Failure rendering the event menu.");
+            }
+        }
     }
 
     public boolean onSwipeUp() {

@@ -9,9 +9,23 @@ import java.util.concurrent.Callable;
 public class Menu {
     private List<MenuEntry> menuItems;
     private int position;
+    private String displayText;
+    private String displayImage;
 
     public List<MenuEntry> getMenuItems() {
         return menuItems;
+    }
+
+    public boolean hasDisplayableElement() {
+        return displayText != null || displayImage != null;
+    }
+
+    public String getDisplayText() {
+        return displayText;
+    }
+
+    public String getDisplayImage() {
+        return displayImage;
     }
 
     public boolean incrementPosition() {
@@ -55,6 +69,8 @@ public class Menu {
     public static class MenuBuilder {
         List<MenuEntry> itemsToSet = new ArrayList<>();
         int position = 0;
+        String displayText = null;
+        String displayImage = null;
 
         public MenuBuilder add(MenuEntry entry) {
             itemsToSet.add(entry);
@@ -66,10 +82,22 @@ public class Menu {
             return this;
         }
 
+        public MenuBuilder displayText(String s) {
+            displayText = s;
+            return this;
+        }
+
+        public MenuBuilder displayImage(String s) {
+            displayImage = s;
+            return this;
+        }
+
         public Menu build() {
             Menu m = new Menu();
             m.menuItems = itemsToSet;
             m.position = position;
+            m.displayText = displayText;
+            m.displayImage = displayImage;
             return m;
         }
     }

@@ -21,6 +21,8 @@ public class AdventureManager {
 
     CharacterManager characterManager;
 
+
+
     int ticksSinceLastEvent = 0;
 
     int updateDelay = 0;

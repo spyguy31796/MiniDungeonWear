@@ -1,8 +1,12 @@
 package com.spylabs.MiniDungeonWear.Managers;
 
+import static com.spylabs.MiniDungeonWear.Managers.MenuManager.goBackCallable;
 import static com.spylabs.MiniDungeonWear.Models.Configuration.RAND_MAX;
 
 import com.spylabs.MiniDungeonWear.Models.Event;
+import com.spylabs.MiniDungeonWear.Models.Menu;
+
+import java.util.concurrent.Callable;
 
 public class EventManager {
     // These should add up to 100
@@ -86,5 +90,82 @@ public class EventManager {
             ++i;
         } while (i < eventCount);
         return event;
+    }
+
+    private static Menu getItemGainMenuDef() {
+        Menu.MenuBuilder builder = new Menu.MenuBuilder();
+        builder.add(new Menu.MenuEntry("OK", "Return to adventuring", goBackCallable()));
+        return builder.build();
+    }
+
+    public static Callable<Void> showItemGainMenuDef() {
+        return () -> {
+            MenuManager.setCurrentMenu(getItemGainMenuDef());
+            return null;
+        };
+    }
+
+    private static Menu getShopMenuDef() {
+        Menu.MenuBuilder builder = new Menu.MenuBuilder();
+        builder.add(new Menu.MenuEntry("Quit", "Return to adventure", goBackCallable()))
+                .add(new Menu.MenuEntry("Items", "Buy items", null))
+                .add(new Menu.MenuEntry("Stats", "Buy stat points", null));
+        return builder.build();
+    }
+
+    public static Callable<Void> showShopMenuDef() {
+        return () -> {
+            MenuManager.setCurrentMenu(getShopMenuDef());
+            return null;
+        };
+    }
+
+    private static Menu getBattleMainMenuDef() {
+        Menu.MenuBuilder builder = new Menu.MenuBuilder();
+        builder.add(new Menu.MenuEntry("Attack", "Attack with your sword.", null))
+                .add(new Menu.MenuEntry("Item", "Use an Item", null))
+                .add(new Menu.MenuEntry("", "", null))
+                .add(new Menu.MenuEntry("Progress", "Character advancement", null))
+                .add(new Menu.MenuEntry("", "", null))
+                .add(new Menu.MenuEntry("Run", "Try to run away", null));
+        return builder.build();
+    }
+
+    public static Callable<Void> showBattleMainMenuDef() {
+        return () -> {
+            MenuManager.setCurrentMenu(getBattleMainMenuDef());
+            return null;
+        };
+    }
+
+    private static Menu getItemBattleMenuDef() {
+        Menu.MenuBuilder builder = new Menu.MenuBuilder();
+        builder.add(new Menu.MenuEntry("Quit", "Return to battle menu", goBackCallable()))
+                .add(new Menu.MenuEntry("Drink", "Heal 50% of your health", null))
+                .add(new Menu.MenuEntry("Drink", "Heal 100% of your health", null))
+                .add(new Menu.MenuEntry("Throw", "Deal fire damage", null))
+                .add(new Menu.MenuEntry("Throw", "Deal ice damage", null))
+                .add(new Menu.MenuEntry("Throw", "Deal lightning damage", null));
+        return builder.build();
+    }
+
+    public static Callable<Void> showItemBattleMenuDef() {
+        return () -> {
+            MenuManager.setCurrentMenu(getItemBattleMenuDef());
+            return null;
+        };
+    }
+
+    private static Menu getNewFloorMenuDef() {
+        Menu.MenuBuilder builder = new Menu.MenuBuilder();
+        builder.add(new Menu.MenuEntry("OK", "Return to adventuring", goBackCallable()));
+        return builder.build();
+    }
+
+    public static Callable<Void> showNewFloorMenuDef() {
+        return () -> {
+            MenuManager.setCurrentMenu(getNewFloorMenuDef());
+            return null;
+        };
     }
 }
